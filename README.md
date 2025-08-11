@@ -4,12 +4,12 @@
 
 ## Description
 
-An interactive python script that enables root access on the T-Mobile (Wingtech) TMOHS1, as well as providing several useful utilites to change the configuration of the device.
+An interactive Python script that enables root access on the T-Mobile (Wingtech) TMOHS1, as well as providing several useful utilities to change the configuration of the device.
 
 ## Features
 
 - Root shell via telnet
-- Temporarily or pesistently enable ADB
+- Temporarily or persistently enable ADB
 - Disable OMA-DM update bootstrap
 - On-device root FTP server to browse the filesystem
 - Mood lighting
