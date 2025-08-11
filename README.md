@@ -31,6 +31,13 @@ pip install -r requirements.txt
 
 Or install the required libraries manually.
 
+### Python 3.13 and later
+
+The standard library's ``telnetlib`` module was removed in Python 3.13.
+This repository bundles a tiny ``simple_telnet`` module that provides the
+subset of functionality required by the exploit scripts, so no additional
+dependencies are needed on newer Python versions.
+
 ## Usage
 
 Connect to your hotspot's network via USB tethering (recommended) or WiFi, then run:

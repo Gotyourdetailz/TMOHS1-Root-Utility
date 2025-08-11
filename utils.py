@@ -11,11 +11,15 @@
 # -----------------------------------------------
 
 import time
-import telnetlib
 from getpass import getpass
 from ftplib import FTP
 import argparse
 import os
+
+# ``telnetlib`` was removed in Python 3.13.  To keep this project working on
+# newer interpreters we ship a very small subset of its functionality in
+# ``simple_telnet``.
+from simple_telnet import Telnet, IAC, NOP
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-v', '--verbose',
@@ -25,9 +29,9 @@ parser.add_argument('-v', '--verbose',
 args = parser.parse_args()
 
 
-# TelnetConnection class adds some case-specific methods to the telnetlib.Telnet class
+# TelnetConnection class adds some case-specific methods to the Telnet class
 
-class TelnetConnection(telnetlib.Telnet):
+class TelnetConnection(Telnet):
     def __init__(self, host, wait):
         self.host = host
         self.wait = wait
@@ -68,9 +72,9 @@ class TelnetConnection(telnetlib.Telnet):
         try:
             if self.sock:
                 # we try 3 times for good luck, idk ask stackoverflow
-                self.sock.send(telnetlib.IAC + telnetlib.NOP)
-                self.sock.send(telnetlib.IAC + telnetlib.NOP)
-                self.sock.send(telnetlib.IAC + telnetlib.NOP)
+                self.sock.send(IAC + NOP)
+                self.sock.send(IAC + NOP)
+                self.sock.send(IAC + NOP)
                 return True
         except:
             return False
