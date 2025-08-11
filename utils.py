@@ -15,6 +15,7 @@ import telnetlib
 from getpass import getpass
 from ftplib import FTP
 import argparse
+import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-v', '--verbose',
@@ -77,7 +78,7 @@ class TelnetConnection(telnetlib.Telnet):
     def resetIfDead(self):
         if not self.checkAlive():
             try:
-                self.open(self.host, self.wait)
+                self.open(self.host, timeout=self.wait)
             except:
                 print('Telnet connection died and we could not revive it. Reboot the hotspot and try again.')
                 quit()
@@ -146,12 +147,15 @@ def adbPersist(conn):
     srv.login()
     srv.cwd('cache')
     if args.verbose: print('Entering /cache. . .')
-    with open('patchUSB.sh', 'rb') as fp:
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    patch_script = os.path.join(base_dir, 'patchUSB.sh')
+    patch_file = os.path.join(base_dir, 'usb.patch')
+    with open(patch_script, 'rb') as fp:
         # upload the patch script from our local machine to /cache on the server
         srv.storbinary('STOR patchUSB.sh', fp)
         if args.verbose:
             print('Uploaded script via FTP, file should now be in /cache on the server. . .')
-    with open('usb.patch', 'rb') as fp:
+    with open(patch_file, 'rb') as fp:
         srv.storbinary('STOR usb.patch', fp)
         if args.verbose:
             print('Uploaded the patch file. . .')
@@ -244,7 +248,7 @@ Would you like to set a custom root password? (Y/n):
         10) Quit\n
         Enter option: '''
         )
-        while int(choice) not in range(1, 11):
+        while not (choice.isdigit() and 1 <= int(choice) <= 10):
             choice = input('Please select a valid choice 1-10: ')
         options = {
             '1': changeRootPwd,
